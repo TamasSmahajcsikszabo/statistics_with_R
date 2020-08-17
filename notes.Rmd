@@ -1,0 +1,30 @@
+
+---
+title: "Wilcox statistics"
+output:
+  html_document: default
+---
+
+R basics
+
+```{r}
+vdat <- c(2, 5, 8, 13, 25) 
+vdat/2 + 2
+
+r1  <- sample(100, 10)
+r2  <- sample(100, 10)
+
+
+r1 %*% r2
+m <- cbind(r1, r2)
+
+#row-wise
+apply(m, 1, mean)
+
+#column-wise
+apply(m, 2, mean)
+
+'%c%' <- function(a, b) cor(a, b)
+
+r1 %c% r2
+```

@@ -1,5 +1,6 @@
 library(ggplot2)
 
+
 # functions
 
 estimate_k <- function(x, y, C, V){
