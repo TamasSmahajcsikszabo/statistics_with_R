@@ -1,0 +1,81 @@
+Fructhmann
+Force directed placement
+
+G = (V, E)
+V vertices, E edges, an edge connects two vertices
+
+Aesthetic criteria
+• evenly distributed vetices
+• edge crossings are minimized
+• edge lengths are normalized
+• reflect inherent symmetry
+
+Force-directed placement: by Eades, after an initial layout the system moves to a minimal energy state
+Force calculations: 
+   • repulsive forces are calculated between every pair of vertices
+   • attractive forces are only calculated between neighbours
+
+Simulated annealing: tbd.
+
+Proposed method by Fruchtmann:
+   Principles:
+   • vertices connected by an edge should be drawn next to each other
+   • vertices should not be drawn too close
+
+   n-body problem: movement of atoms or celestial bodies
+
+   The algorithm:
+      input can be randomly placed vertices
+      Steps:
+         1. calculate attractive force effects on each vertex
+         2. calculate repulsive force effects on each vertex
+         3. limit placement with the temperature (cooling factor means the temperatire [a maximum value for placement] decreases over time)
+            ~ as the layout becomes better, the adjustments become finer
+            ~ cooling can have its own function, linear or other - some are more efficient than others
+
+         Pseudo-code:
+         area = W * L
+         G = (V, E) ~ initially assigned randomly
+         k = sqrt(area / abs(V))
+         f_a = x^2 / k
+         f_r = k^2 / x
+
+         for each iteration:
+            /esitmate repulsive forces/
+            for each V:
+               • each v has two vectors: pos and disp
+               • disp = 0
+               • for each other v:
+                  ▫ estimate delta of pos between v and u (other v)
+                  ▫ adjust v.disp = v.disp + (delta / abs(delta) * f_r(abs(delta)))
+
+            /estimate atractive forces/
+            for each E:
+               • each E is an ordered pair of v and u vertices
+               • delta = e.v.pos - e.u.pos
+                  ▫ adjust e.v.disp = e.v.disp - (delta/abs(delta) * f_a(abs(delta)))
+                  ▫ adjust e.u.disp = e.u.disp + (delta/abs(delta) * f_a(abs(delta)))
+
+            
+            /limit the maximum displacement to temperature t/
+            /prevent being placed outside of the frame/
+            for each V:
+               v.pos = v.pos + (v.disp/abs(v.disp)) * min(v.disp, t)
+               v.pos.x = min(W/2, max(-W/2, v.pos.x))
+               v.pos.y = min(L/2, max(-L/2, v.pos.y))
+            reduce t with the cooling factor
+            t = cool(t)
+
+   Defining the forces:
+   • see the R file for details
+   • hill climbing: Overcoming a bad configuration by moving through a yet worse configuration before reaching a better one
+
+   
+   The frame:
+   • modelled as four walls: each of which exerts a normal force exactly equal to the force pushing any vertex beyond it, thus stopping it like a real wall
+   • 
+
+
+
+
+
