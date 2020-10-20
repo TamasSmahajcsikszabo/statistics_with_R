@@ -54,6 +54,8 @@ print(paste0('number of rows: ', nrow(R) ,'; number of columns: ', ncol(R)))
 v <- c(3,2)
 M <- matrix(c(1, 2, 2, -2), byrow = TRUE, ncol = 2)
 
+v %*% M
+
 as_vector_plot <- function(v){
   data <- data.frame(x = 0, y = 0)
   new_point <- data.frame(x= v[1], y = v[2])
@@ -77,3 +79,43 @@ ggplot() +
   geom_text(data = as_product_plot(v, M), aes(x = max(x), y = max(y), label = paste0('Vector p of (', max(x), "; ", max(y), ")")), vjust = -2) +
   scale_x_continuous(breaks = seq(1, max(as_product_plot(v, M)[1]) * 5, 1), limits = c(0, max(as_product_plot(v, M)[1]) * 2)) +
   ylim(0, v[2] * 5)
+
+
+# matrix transformations
+
+x <- 4
+y  <- 2
+
+shearing <- function(v, x, y){
+  x_shearing <- matrix(c(1, x, 0, 1), byrow = T, ncol = 2) 
+  y_shearing <- matrix(c(1, 0, y, 1), byrow = T, ncol = 2) 
+  vec <- v %*% x_shearing %*% y_shearing
+
+  as.vector(vec)
+}
+
+ggplot() +
+  geom_point(data = as_vector_plot(shearing(v, 4, 2)), aes(x,y)) +
+  geom_point(data = as_vector_plot(v), aes(x, y))
+
+theta  <- 30
+
+derive_basis_vectors <- function(v) {
+  vec1 <- c(v[1], 0)
+  vec2 <- c(0, v[2])
+  matrix(c(vec1, vec2), byrow = TRUE, ncol = 2)
+}
+
+rotation <- function(v, theta){
+  matrix(c(cos(theta), (-1)* sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
+}
+original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))
+rotated <- data.frame(rotation(v, 30))
+
+v <- c(1,1)
+
+ggplot() +
+  geom_point(data = original, aes(X1,X2)) +
+  geom_segment(data = original, aes(x=0, y=0, xend = X1, yend= X2), arrow = arrow(length = unit(0.02, "npc"))) +
+  geom_point(data = rotated, aes(X1,X2)) +
+  geom_segment(data = rotated, aes(x=0, y=0, xend = X1, yend= X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc")))
