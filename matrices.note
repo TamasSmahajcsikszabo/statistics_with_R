@@ -1,0 +1,10 @@
+## Matrices
+* a cell is called element
+* matric ~ mater
+* James Joseph Sylvester - matrix
+
+# Matrix Multiplication and Matrices as Transformations
+* multiplying two matrices turns out to entail repeated vector inner product calculations, e.g. the element in the third row and second column of the product is the inner product of the third row of the first matrix with the second column of the second matrix
+* A matrix product is only well defined if the number of columns in the first matrix equals the
+number of rows in the second matrix
+

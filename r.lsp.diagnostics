@@ -1,0 +1,78 @@
+[2020-10-20 17:28:19.717] {
+  "args": [],
+  "path": "",
+  "debug": "r.lsp.diagnostics",
+  "diagnostics": true,
+  "lang": "",
+  "use_stdio": false
+}
+[2020-10-20 17:28:19.717] received:  Content-Length: 2740
+[2020-10-20 17:28:19.728] received payload.
+[2020-10-20 17:28:19.728] handling notification:  textDocument/didOpen
+[2020-10-20 17:28:19.728] did open: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:28:19.764] diagnostics session acquired session_id = 1 remain pool size = 1
+[2020-10-20 17:28:19.765] diagnostics session ready 1 2020-10-20 17:28:19
+[2020-10-20 17:28:19.767] parse session acquired session_id = 1 remain pool size = 1
+[2020-10-20 17:28:19.767] parse session ready 1 2020-10-20 17:28:19
+[2020-10-20 17:28:20.096] parse session released session_id = 1 remain pool size = 2
+[2020-10-20 17:28:20.096] parse_callback called: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:28:20.100] parse task timing: 0.336515188217163   file:///home/tamas/repos/statistics_with_r/matrices.R
+[2020-10-20 17:28:21.124] diagnostics session released session_id = 1 remain pool size = 2
+[2020-10-20 17:28:21.124] diagnostics_callback called: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:28:21.127] deliver:  ["Notification", "Message", "R6"]
+[2020-10-20 17:28:21.127] method:  textDocument/publishDiagnostics
+[2020-10-20 17:28:21.188] diagnostics task timing: 1.42426776885986   file:///home/tamas/repos/statistics_with_r/matrices.R
+[2020-10-20 17:28:21.390] resolve_callback called: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:28:21.798] ns:  Namespace: ggplot2
+[2020-10-20 17:28:21.800] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2"]
+[2020-10-20 17:28:21.817] ns:  Namespace: tibble
+[2020-10-20 17:28:21.817] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble"]
+[2020-10-20 17:28:21.856] ns:  Namespace: tidyr
+[2020-10-20 17:28:21.857] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr"]
+[2020-10-20 17:28:21.911] ns:  Namespace: readr
+[2020-10-20 17:28:21.911] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr", "readr"]
+[2020-10-20 17:28:21.921] ns:  Namespace: purrr
+[2020-10-20 17:28:21.921] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr", "readr", "purrr"]
+[2020-10-20 17:28:21.949] ns:  Namespace: dplyr
+[2020-10-20 17:28:21.949] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr", "readr", "purrr", "dplyr"]
+[2020-10-20 17:28:21.955] ns:  Namespace: stringr
+[2020-10-20 17:28:21.955] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr", "readr", "purrr", "dplyr", "stringr"]
+[2020-10-20 17:28:21.961] ns:  Namespace: forcats
+[2020-10-20 17:28:21.961] loaded_packages:  ["base", "methods", "datasets", "utils", "grDevices", "graphics", "stats", "tidyverse", "ggplot2", "tibble", "tidyr", "readr", "purrr", "dplyr", "stringr", "forcats"]
+[2020-10-20 17:28:21.965] resolve task timing: 1.86499214172363   file:///home/tamas/repos/statistics_with_r/matrices.R
+[2020-10-20 17:29:46.842] received:  Content-Length: 2723
+[2020-10-20 17:29:46.852] received payload.
+[2020-10-20 17:29:46.853] handling notification:  textDocument/didSave
+[2020-10-20 17:29:46.853] did save: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R"
+}
+[2020-10-20 17:29:46.856] diagnostics session acquired session_id = 2 remain pool size = 1
+[2020-10-20 17:29:46.856] diagnostics session ready 2 2020-10-20 17:29:46
+[2020-10-20 17:29:46.858] parse session acquired session_id = 2 remain pool size = 1
+[2020-10-20 17:29:46.859] parse session ready 2 2020-10-20 17:29:46
+[2020-10-20 17:29:47.165] parse session released session_id = 2 remain pool size = 2
+[2020-10-20 17:29:47.165] parse_callback called: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:29:47.170] parse task timing: 0.314456701278687   file:///home/tamas/repos/statistics_with_r/matrices.R
+[2020-10-20 17:29:48.183] diagnostics session released session_id = 2 remain pool size = 2
+[2020-10-20 17:29:48.183] diagnostics_callback called: {
+  "uri": "file:///home/tamas/repos/statistics_with_r/matrices.R",
+  "version": 1
+}
+[2020-10-20 17:29:48.185] deliver:  ["Notification", "Message", "R6"]
+[2020-10-20 17:29:48.186] method:  textDocument/publishDiagnostics
+[2020-10-20 17:29:48.252] diagnostics task timing: 1.39712452888489   file:///home/tamas/repos/statistics_with_r/matrices.R
