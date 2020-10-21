@@ -85,20 +85,20 @@ ggplot() +
 
 x <- 4
 y  <- 2
+v <- c(1,0)
+theta  <- -30
 
-shearing <- function(v, x, y){
-  x_shearing <- matrix(c(1, x, 0, 1), byrow = T, ncol = 2) 
-  y_shearing <- matrix(c(1, 0, y, 1), byrow = T, ncol = 2) 
-  vec <- v %*% x_shearing %*% y_shearing
+shearing <- function(v, k){
+  x_shearing <- matrix(c(1, k, 0, 1), byrow = T, ncol = 2) 
+  vec <- v %*% x_shearing
 
   as.vector(vec)
 }
 
 ggplot() +
-  geom_point(data = as_vector_plot(shearing(v, 4, 2)), aes(x,y)) +
+  geom_point(data = as_vector_plot(shearing(v, 4)), aes(x,y)) +
   geom_point(data = as_vector_plot(v), aes(x, y))
 
-theta  <- 30
 
 derive_basis_vectors <- function(v) {
   vec1 <- c(v[1], 0)
@@ -107,15 +107,18 @@ derive_basis_vectors <- function(v) {
 }
 
 rotation <- function(v, theta){
-  matrix(c(cos(theta), (-1)* sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
+  theta  <- theta * pi / 180
+  v %*%  matrix(c(cos(theta), (-1)* sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
 }
 original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))
-rotated <- data.frame(rotation(v, 30))
-
 v <- c(1,1)
+rotated <- data.frame(rotation(derive_basis_vectors(v), theta))
+
 
 ggplot() +
   geom_point(data = original, aes(X1,X2)) +
   geom_segment(data = original, aes(x=0, y=0, xend = X1, yend= X2), arrow = arrow(length = unit(0.02, "npc"))) +
   geom_point(data = rotated, aes(X1,X2)) +
-  geom_segment(data = rotated, aes(x=0, y=0, xend = X1, yend= X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc")))
+  geom_segment(data = rotated, aes(x=0, y=0, xend = X1, yend= X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc"))) +
+  xlim(-1, 1) +
+  ylim(-1, 1)
