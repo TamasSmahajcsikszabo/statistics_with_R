@@ -110,8 +110,10 @@ rotation <- function(v, theta){
   theta  <- theta * pi / 180
   v %*%  matrix(c(cos(theta), (-1)* sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
 }
-original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))
+
+
 v <- c(1,1)
+original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))
 rotated <- data.frame(rotation(derive_basis_vectors(v), theta))
 
 
@@ -122,3 +124,93 @@ ggplot() +
   geom_segment(data = rotated, aes(x=0, y=0, xend = X1, yend= X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc"))) +
   xlim(-1, 1) +
   ylim(-1, 1)
+
+# conjugate transpose
+Conj(t(rotation(v, theta)))
+
+# cofactor matrix
+
+M  <- matrix(c(3, 4, -2, -2, -2, 1, 1, 1, -7), byrow=TRUE, nrow = 3)
+i <- 1
+j <- 2
+
+get_cofactor  <- function(M, i, j){
+    M_cof <- matrix(M[-i,-j], byrow = FALSE, nrow = nrow(M) -1)
+
+    if(sum(i,j)%% 2 == 0){
+        M_cof
+    } else {
+        M_cof * (-1)
+    }
+}
+
+estimate_determinant <- function(M){
+    M[1,1] * M[2,2] - M[1,2]* M[2,1]
+}
+
+get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE){
+    i <- seq(1, nrow(M))
+    j <- seq(1, ncol(M))
+    m <- matrix(rep(0, (nrow(M)-1) * (ncol(M)-1)), nrow=nrow(M)-1, ncol = ncol(M)-1)
+    M_cof  <- matrix(rep(list(m),length(M)),nrow=nrow(M))
+
+    for (i_i in i){
+        for (j_i in j){
+            M_cof[i_i, j_i][[1]] <- get_cofactor(M, i_i, j_i)
+        }
+    }
+    if (!estimate) {
+        M_cof
+    } else {
+        M_est <- matrix(nrow = nrow(M), ncol = ncol(M)) 
+        for (i_i in i){
+            for (j_i in j){
+                det <- estimate_determinant(M_cof[i_i, j_i][[1]])
+
+                if (sum(i_i, j_i) %% 2 != 0){
+                    det <- (-1) * det
+                }
+
+                M_est[i_i, j_i] <- det
+            }
+        }
+        if (adjoint){
+            t(M_est)
+        } else {
+            M_est
+        }
+    }
+}
+
+get_cofactor_matrix(M, estimate = TRUE)
+
+# get determinant
+
+get_determinant <- function(M, reference_no = 1, reference_dim = "row"){
+    if (reference_dim == "row") {
+        reference <- M[reference_no, ]
+        cofactor_matrix <- get_cofactor_matrix(M)[reference_no,]
+    } else if (reference_dim == "col") {
+        reference <- M[, reference_no] 
+        cofactor_matrix <- get_cofactor_matrix(M)[, reference_no]
+    } else {
+        stop("Please supply either 'col' or 'row' as the reference dimension!")
+    }
+    det <- 0
+    for (i in seq_along(reference)){
+        if (i %% 2 == 0) {reference[i] <- reference[i] * (-1)}
+        det <- det + reference[i] * estimate_determinant(cofactor_matrix[i][[1]])
+    }
+    det
+}
+
+get_determinant(M)
+
+
+get_inverse <- function(M){
+    det <- get_determinant(M)
+    adjoint <- get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE)
+
+    1/det * adjoint
+}
+I  <- get_inverse(M)

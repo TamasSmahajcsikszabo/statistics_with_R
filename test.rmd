@@ -1,0 +1,105 @@
+---
+title: Descriptive Analysis of network graph characteristics
+---
+
+Questions about structures or characteristics of a network graph:
+* Paths of graphs, flows of commodities
+* important nodes as centrality
+* groups of similar vertices as graph partitioning problem 
+
+```{r libraries}
+library(sand)
+library(igraph)
+library(ggplot2)
+```
+
+Vertex and Edge characteristics
+
+1. Vertex Degree
+   In a network of G = (V, E), the degree *d~v~* of a vertex *v* is the number of edges incident upon *v*   
+   Given G, *f~d~* is the fraction of vertices *v* with degree *d~v~* = d
+   The collection {*f~d~*}~d>=0~ is called the *degree distribution of G*; it's a rescaling of the set of degree frequencies from the original degree sequence
+   For weighted networks, a generalization of degree is the notion of vertex *strength*, obtained by summing up all the weights of edges incident to the given vertex; its distribution is the *weighted degree distribution*, 
+
+```{r karate}
+data(karate)
+f_d  <- degree(karate)
+plot(f_d)
+hist(f_d, col="cornflowerblue", xlim=c(0,50), xlab="Vertex Degree", ylab = "Frequency", main = "")
+w <- strength(karate)
+hist(w, col="pink", xlim=c(0,50), xlab="Vertex Strength", ylab = "Frequency", main = "")
+
+```
+
+
+Shapes of degree distribution can vary greatly
+
+```{r yeast}
+data(yeast)
+d.yeast <- degree(yeast)
+w.yeast <- strength(yeast)
+hist(d.yeast, col="cornflowerblue", xlim=c(0,50), xlab="Vertex Degree", ylab = "Frequency", main = "")
+hist(w.yeast, col="cornflowerblue", xlim=c(0,50), xlab="Vertex Degree", ylab = "Frequency", main = "")
+```
+
+Creating a log-scale for this distribution:
+
+```{r log_scale}
+dd.yeast <- degree_distribution(yeast)
+d <- 1:max(d.yeast) -1
+ind <- (dd.yeast != 0 )
+plot(d[ind], dd.yeast[ind], log = "xy", col="blue", xlab=c('Log-Degree'), ylab=c('Log-Intensity'), main="Log-Log Degree Distribution")
+```
+
+The average degree of the *neighbors* of a vertex
+* e.g. vertex degree as a function of average vertex degree of neighbors
+* are higher degree vertices tend to connect to similar degree neighbors?
+
+```{r avg. neighbor degree}
+a.nn.deg.yeast <- knn(yeast, V(yeast))$knn
+length(a.nn.deg.yeast)
+
+plot(d.yeast, a.nn.deg.yeast, log = "xy", col="goldenrod", xlab=c('Log Vertex Degree'), ylab=c('Log Average Neighbor Degree'))
+
+ggplot() +
+   geom_point(aes(x = log(d.yeast), y =log(a.nn.deg.yeast)), color = "goldenrod")
+```
+
+## Vertex Centrality
+* vertex importance
+* one such measure is 'vertex degree'
+
+1. closeness centrality
+   * a vertex is central if it's close to many others
+   * centrality varies inversely with a measure of total distance of a vertex from all others,
+
+     $$c_{Cl} (\textit{v}) = \frac{1}{\sum_{u \in V} dist(\textit{v}, u)}$$
+   * dist(v, u) is the geodesic distance between the vertices $\textit{u, v} \in V$
+   * often closeness is normalized to interval [0,1] by multiplication by a factor $ $\textit{N_v} - 1$ $
+
+
+2. betweenness centrality
+   * summarize the extent a vertex is located 'between' other pairs of vertices
+   * in this sense importance means where a vertex is located with respect to the paths of the network
+   * vertices that sit on many paths are considered important
+   * Freeman's formula
+
+   \[ c_{B}(V) = \sum_{s \neq t \neq v \in V} \frac {\sigma (s, t \mid v)} {\sigma(s, t)} \]
+
+   where the nominator is the total number of shortest paths between s and t, which pass through v; the denominator is the total number of shortest paths between s and t.
+   * mostly rescaled by division of a factor of (N_v -1) (N_v -2) /2
+
+
+3. eigenvector centrality
+   * the notion of 'status', 'rank' or 'prestige'
+   * the more central the neighbors are, the more central the vertex is
+   * can be defined as eigenvector solutions of linear systems of equations
+   * there are many eigenvector centrality measures, such as Bonacich's:
+
+   \[ c_{E_i}(v) = \alpha \sum _{[u, v] \in E} C_{E_i}(u) \]
+
+
+
+
+
+
