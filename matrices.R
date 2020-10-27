@@ -131,8 +131,6 @@ Conj(t(rotation(v, theta)))
 # cofactor matrix
 
 M  <- matrix(c(3, 4, -2, -2, -2, 1, 1, 1, -7), byrow=TRUE, nrow = 3)
-i <- 1
-j <- 2
 
 get_cofactor  <- function(M, i, j){
     M_cof <- matrix(M[-i,-j], byrow = FALSE, nrow = nrow(M) -1)
@@ -184,9 +182,11 @@ get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE){
 
 get_cofactor_matrix(M, estimate = TRUE)
 
+
+
 # get determinant
 
-get_determinant <- function(M, reference_no = 1, reference_dim = "row"){
+get_determinant <- function(M, reference_no = 1, reference_dim = "row") {
     if (reference_dim == "row") {
         reference <- M[reference_no, ]
         cofactor_matrix <- get_cofactor_matrix(M)[reference_no,]
@@ -207,10 +207,14 @@ get_determinant <- function(M, reference_no = 1, reference_dim = "row"){
 get_determinant(M)
 
 
-get_inverse <- function(M){
+get_inverse <- function(M) {
     det <- get_determinant(M)
     adjoint <- get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE)
 
     1/det * adjoint
 }
-I  <- get_inverse(M)
+
+get_inverse(M)
+# verification
+M %*% get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE) * (1/get_determinant(M))
+
