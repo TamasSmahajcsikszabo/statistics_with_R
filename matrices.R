@@ -179,6 +179,7 @@ get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE) {
   }
 }
 
+get_cofactor_matrix(M, adjoint = TRUE, estimate = TRUE)
 get_cofactor_matrix(M, estimate = TRUE)
 
 
@@ -216,5 +217,27 @@ get_inverse <- function(M) {
 }
 
 get_inverse(M)
-# verification
+# verification: I = M * M^-1
 M %*% get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE) * (1 / get_determinant(M))
+
+# book exercise verification; 5.12
+m <- matrix(c(4, -2, -2, 2, 8, 4, 30, 12, -4), byrow = TRUE, nrow = 3)
+dx <- matrix(c(10, -2, -2, 32, 8, 4, 24, 12, -4), byrow = TRUE, nrow = 3)
+dy <- matrix(c(4, 10, -2, 2, 32, 4, 30, 24, -4), byrow = TRUE, nrow = 3)
+dz <- matrix(c(4, -2, 10, 2, 8, 32, 30, 12, 24), byrow = TRUE, nrow = 3)
+
+
+d <- get_determinant(m)
+dx <- get_determinant(dx)
+dy <- get_determinant(dy)
+dz <- get_determinant(dz)
+
+x <- dx / d
+y <- dy / d
+z <- dz / d
+
+
+# 5.13.
+m <- matrix(c(2, 1, 1, 1, -2, 3, -3, 2, -2), byrow = TRUE, nrow = 3)
+get_determinant(m)
+get_cofactor_matrix(m, estimate = TRUE, adjoint = TRUE)
