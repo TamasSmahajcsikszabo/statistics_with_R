@@ -1,4 +1,4 @@
-library(tidyverse)
+
 
 # matrix multiplication
 
@@ -50,6 +50,29 @@ V <- matrix(c(3, -2, 1, -7, 6, -2), byrow = FALSE, ncol = 2)
 R <- A %*% V
 print(paste0("number of rows: ", nrow(R), "; number of columns: ", ncol(R)))
 
+# custom function for matrix multiplication
+`%**%` <- function(A, B){
+    # expects two matrices as inputs
+    if (ncol(A) != nrow(B)) {
+        print("Check matrix sizes, they don't match!")
+    }
+    result  <- matrix(nrow = nrow(A), ncol = ncol(B))
+    for (r in seq(1, nrow(A))) {
+        for (c in seq(1, ncol(B))) {
+            row_elements  <- A[r,]
+            column_elements <- B[,c]
+            prod <- 0
+            for (e in seq(1, length(row_elements))){
+                prod <- prod + row_elements[e] * column_elements[e]
+            }
+            result[r,c] <- prod
+        }
+    }
+    result
+}
+
+A %**% B
+
 # example for linear transformation
 v <- c(3, 2)
 M <- matrix(c(1, 2, 2, -2), byrow = TRUE, ncol = 2)
@@ -59,7 +82,6 @@ v %*% M
 as_vector_plot <- function(v) {
   data <- data.frame(x = 0, y = 0)
   new_point <- data.frame(x = v[1], y = v[2])
-
   bind_rows(data, new_point)
 }
 
@@ -84,15 +106,40 @@ ggplot() +
 
 x <- 4
 y <- 2
-v <- c(1, 0)
+v <- c(3, 5)
+k  <- 3
 theta <- -30
 
 shearing <- function(v, k) {
-  x_shearing <- matrix(c(1, k, 0, 1), byrow = T, ncol = 2)
-  vec <- v %*% x_shearing
+    base_vectors  <- derive_basis_vectors(v)
+    x_shearing <- matrix(c(1, 0, k, 1), byrow = FALSE, ncol = 2)
+    y_shearing <- matrix(c(1, k, 0, 1), byrow = FALSE, ncol = 2)
+    x_sheared <- x_shearing %*% v
+    y_sheared <- y_shearing %*% v
+    x <- as_vector_plot(x_sheared)
+    y <- as_vector_plot(y_sheared)
+    ggplot() +
+        geom_point(data = as_vector_plot(v)[2,], aes(x,y)) +
+        geom_point(data=x[2,], aes(x,y), color = "cornflowerblue") +
+        geom_point(data=y[2,], aes(x,y), color = "cornflowerblue") +
+        xlim(0, 20) +
+        ylim(0, 20) +
+        geom_segment(aes(x=0, y=0, xend=as_vector_plot(v)[2,1], yend=as_vector_plot(v)[2,2]), arrow=arrow()) +
+        geom_segment(aes(x=0, y=0, xend=x[2,1], yend=x[2,2]), linetype="dashed", arrow=arrow(), color = "cornflowerblue") +
+        geom_text(aes(x=x[2,1], y=x[2,2]),label="shearing along X axis,\n Y coordinate is unchanged", color = "cornflowerblue", vjust=-1) +
+        geom_segment(aes(x=0, y=0, xend=y[2,1], yend=y[2,2]), linetype="dashed", arrow=arrow(), color = "cornflowerblue") +
+        geom_text(aes(x=y[2,1], y=y[2,2]),label="shearing along Y axis,\n X coordinate is unchanged", color = "cornflowerblue", vjust=-1) +
+        labs(
+             title = "Shearing along X and Y axis by matrix transformation",
+             x = "X",
+             y = "Y",
+             subtitle = paste0('base vector is (',v[1], '; ',v[2],')'),
+             caption = paste0('k = ',k)
+        )
 
-  as.vector(vec)
 }
+
+shearing(c(3,3), 2)
 
 ggplot() +
   geom_point(data = as_vector_plot(shearing(v, 4)), aes(x, y)) +
@@ -106,6 +153,7 @@ derive_basis_vectors <- function(v) {
 }
 
 rotation <- function(v, theta) {
+    # radius to degree
   theta <- theta * pi / 180
   v %*% matrix(c(cos(theta), (-1) * sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
 }
@@ -120,9 +168,7 @@ ggplot() +
   geom_point(data = original, aes(X1, X2)) +
   geom_segment(data = original, aes(x = 0, y = 0, xend = X1, yend = X2), arrow = arrow(length = unit(0.02, "npc"))) +
   geom_point(data = rotated, aes(X1, X2)) +
-  geom_segment(data = rotated, aes(x = 0, y = 0, xend = X1, yend = X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc"))) +
-  xlim(-1, 1) +
-  ylim(-1, 1)
+  geom_segment(data = rotated, aes(x = 0, y = 0, xend = X1, yend = X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc")))
 
 # conjugate transpose
 Conj(t(rotation(v, theta)))
@@ -145,7 +191,7 @@ estimate_determinant <- function(M) {
   M[1, 1] * M[2, 2] - M[1, 2] * M[2, 1]
 }
 
-get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE) {
+get_cofactor_matrix <- function(M, estimae = FALSE, adjoint = TRUE) {
   i <- seq(1, nrow(M))
   j <- seq(1, ncol(M))
   m <- matrix(rep(0, (nrow(M) - 1) * (ncol(M) - 1)), nrow = nrow(M) - 1, ncol = ncol(M) - 1)
@@ -240,4 +286,115 @@ z <- dz / d
 # 5.13.
 m <- matrix(c(2, 1, 1, 1, -2, 3, -3, 2, -2), byrow = TRUE, nrow = 3)
 get_determinant(m)
-get_cofactor_matrix(m, estimate = TRUE, adjoint = TRUE)
+get_cofactor_matrix(m, estimate = TRUE, adjoint = TRUE)t
+
+
+# regression
+library(tibble)
+data <- tribble(
+  ~x, ~y,
+  0, 56.751,
+  0.2987, 57.037,
+  0.4648, 56.979,
+  0.5762, 57.074,
+  0.8386, 57.42
+) 
+reg <- lm(data=data, y ~ x)
+predictions <- data.frame(y_hat = predict(reg, data))
+
+data <- cbind(data, predictions)
+coefs <- reg$coef
+beta0  <-coefs[1]
+beta1 <- coefs[2]
+
+
+ggplot()+
+    geom_point(data=data, aes(x,y)) +
+    geom_abline(aes(intercept = beta0, slope = beta1)) +
+    geom_segment(data=data, aes(x=x, y=y_hat, xend=x, yend=y), linetype = "dashed", color = "grey50")
+
+A <- seq(1,10)
+B <- seq(11, 23)
+A <- matrix(seq(1,9), ncol = 3)
+B <- matrix(seq(1,9), ncol = 3)
+
+# Kronecker product
+`%K%` <- function(A, B){
+    if (all(is.vector(A), is.vector(B))){
+        result <- matrix(nrow = length(A), ncol = length(B))
+        for (i in seq(length(A))){
+            for (j in seq(length(B))){
+                result[i, j]  <- A[i] * B[j]
+            }
+        }
+    } else if (all(is.matrix(A), is.matrix(B))) {
+        result  <-  matrix(rep(list(B), length(A)), ncol = ncol(A))
+        for (i in seq(nrow(A))){
+            for (j in seq(ncol(A))){
+                est <- B * A[i, j]
+                result[i,j][[1]] <- est
+            }
+        }
+    } else if(is.vector(A) || is.vector(B)) {
+        if (is.vector(A)){
+            A <- matrix(A, nrow=1)
+        } else if(is.vector(B)){
+            B <- matrix(B, nrow=1)
+        }
+        A %K% B
+    }
+
+    result
+}
+
+#Hadamard product
+check_size <- function(A, B){
+    if (all(ncol(A) == ncol(B), nrow(A) == nrow(B))) {
+        test <- TRUE
+    } else {
+        test  <- FALSE
+    }
+    test
+}
+
+`%H%` <- function(A, B){
+    if (all(is.matrix(A), is.matrix(B))){
+        if (check_size(A, B)){
+            result <- matrix(ncol=ncol(A), nrow=nrow(A))
+            for (i in seq(nrow(A))) {
+                for (j in seq(ncol(A))){
+                    result[i, j] <- A[i, j] * B[i, j] 
+                }
+            }
+        } else{
+            result  <- stop("Please check if matrix sizes of the inputs do match!")
+        }
+
+    } else{
+        result <- stop("You have to provide matrices as inputs!")
+    }
+    result
+}
+
+
+# exercises 5.7
+
+A  <- matrix(c(1, 2, -1, 1), nrow=2, byrow = TRUE)
+B  <- matrix(c(2, 3, 4, 1), nrow=2, byrow = TRUE)
+A %H% B
+
+C <- matrix(c(2, -0.3, 1, 1.5, 7, -0.4), nrow = 2, byrow=TRUE)
+D <- matrix(c(1.4, 9, 0.5, 8, -0.1, 10), nrow = 2, byrow=TRUE)
+C %H% D
+
+
+# exercises 5.8.
+B <- c(3, -1, 4)
+r <- A %K% B
+r[2,2]
+
+
+A <- c(-2, -3)
+B <- matrix(c(0, 1, 2, 3, 4, 5, 6, 7, 8), nrow=3, byrow = TRUE)
+B %K% B
+
