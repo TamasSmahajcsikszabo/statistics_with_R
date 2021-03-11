@@ -1,0 +1,137 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+A	matrices.R	/^A <- matrix(c(1, 2, 3, 4, 5, 6), byrow = TRUE, nrow = 2)$/;"	g
+A	matrices.R	/^A <- matrix(c(3, 4, -1, 8), byrow = TRUE, nrow = 2)$/;"	g
+A	matrices.R	/^A <- matrix(c(4, 3, 2, 1, -2, -4, -5, 8, 11), byrow = TRUE, nrow = 3)$/;"	g
+A	matrices.R	/^A <- matrix(rnorm(4), byrow = TRUE, nrow = 2)$/;"	g
+A	matrices.R	/^A <- matrix(rnorm(6), byrow = TRUE, nrow = 2)$/;"	g
+A	matrices.R	/^A <- matrix(seq(1, 9, 1), byrow = TRUE, nrow = 1)$/;"	g
+B	matrices.R	/^B <- matrix(c(1, 2, 3, 4, 5, 6), byrow = FALSE, ncol = 2)$/;"	g
+EVD	psyichological_networks.R	/^EVD <- eigen(fitEM$ULU_postmean)$/;"	g
+I	matrices.R	/^# verification: I = M * M^-1$/;"	v
+M	matrices.R	/^M <- matrix(c(1, 2, 2, -2), byrow = TRUE, ncol = 2)$/;"	g
+M	matrices.R	/^M <- matrix(c(3, 4, -2, -2, -2, 1, 1, 1, -7), byrow = TRUE, nrow = 3)$/;"	g
+M_cof	matrices.R	/^  M_cof <- matrix(M[-i, -j], byrow = FALSE, nrow = nrow(M) - 1)$/;"	v
+M_cof	matrices.R	/^  M_cof <- matrix(rep(list(m), length(M)), nrow = nrow(M))$/;"	v
+V	matrices.R	/^V <- matrix(c(2, 3, -2, 7), byrow = FALSE, ncol = 2)$/;"	g
+V	matrices.R	/^V <- matrix(c(3, -2, 1, -7, 6, -2), byrow = FALSE, ncol = 2)$/;"	g
+V	matrices.R	/^V <- matrix(rnorm(2), byrow = FALSE, ncol = 1)$/;"	g
+V	matrices.R	/^V <- matrix(rnorm(21), byrow = FALSE, ncol = 7)$/;"	g
+V	matrices.R	/^V <- matrix(seq(1, 9, 1), byrow = FALSE, ncol = 1)$/;"	g
+adjoint	matrices.R	/^  adjoint <- get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE)$/;"	v
+adjoint	matrices.R	/^get_cofactor_matrix(M, adjoint = TRUE, estimate = TRUE)$/;"	v
+adolescent_glasso	psyichological_networks.R	/^adolescent_glasso <- EBICglasso(cor(Rogers_Adolescent), n=87, gamma=0)$/;"	g
+adolescent_zeroorder	psyichological_networks.R	/^adolescent_zeroorder <- cor(Rogers_Adolescent)$/;"	g
+adult_glasso	psyichological_networks.R	/^adult_glasso <- EBICglasso(cor(Rogers), n = 408)$/;"	g
+adult_zeroorder	psyichological_networks.R	/^adult_zeroorder <- cor(Rogers)$/;"	g
+alpha	network_studies.R	/^ggplot(res, aes(x = distance), alpha = 0\/5, size = 4)+$/;"	v
+as_product_plot	matrices.R	/^as_product_plot <- function(v, M) {$/;"	f
+as_vector_plot	matrices.R	/^as_vector_plot <- function(v) {$/;"	f
+bootstrapStylePandocTables	test.html	/^function bootstrapStylePandocTables() {$/;"	f
+bp	chapter1.R	/^bp <- sample(seq(110,170), 100, replace = TRUE)$/;"	g
+bp_data	chapter1.R	/^bp_data <- data.frame($/;"	g
+buildTabset	test.html	/^  function buildTabset(tabset) {$/;"	f
+byrow	matrices.R	/^  matrix(c(vec1, vec2), byrow = TRUE, ncol = 2)$/;"	v
+byrow	matrices.R	/^  v %*% matrix(c(cos(theta), (-1) * sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)$/;"	v
+byrow	matrices.R	/^A <- matrix(c(1, 2, 3, 4, 5, 6), byrow = TRUE, nrow = 2)$/;"	v
+byrow	matrices.R	/^A <- matrix(c(3, 4, -1, 8), byrow = TRUE, nrow = 2)$/;"	v
+byrow	matrices.R	/^A <- matrix(c(4, 3, 2, 1, -2, -4, -5, 8, 11), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^A <- matrix(rnorm(4), byrow = TRUE, nrow = 2)$/;"	v
+byrow	matrices.R	/^A <- matrix(rnorm(6), byrow = TRUE, nrow = 2)$/;"	v
+byrow	matrices.R	/^A <- matrix(seq(1, 9, 1), byrow = TRUE, nrow = 1)$/;"	v
+byrow	matrices.R	/^M <- matrix(c(1, 2, 2, -2), byrow = TRUE, ncol = 2)$/;"	v
+byrow	matrices.R	/^M <- matrix(c(3, 4, -2, -2, -2, 1, 1, 1, -7), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^dx <- matrix(c(10, -2, -2, 32, 8, 4, 24, 12, -4), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^dy <- matrix(c(4, 10, -2, 2, 32, 4, 30, 24, -4), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^dz <- matrix(c(4, -2, 10, 2, 8, 32, 30, 12, 24), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^m <- matrix(c(2, 1, 1, 1, -2, 3, -3, 2, -2), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^m <- matrix(c(4, -2, -2, 2, 8, 4, 30, 12, -4), byrow = TRUE, nrow = 3)$/;"	v
+byrow	matrices.R	/^original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))$/;"	v
+cofactor_matrix	matrices.R	/^    cofactor_matrix <- get_cofactor_matrix(M)[, reference_no]$/;"	v
+cofactor_matrix	matrices.R	/^    cofactor_matrix <- get_cofactor_matrix(M)[reference_no, ]$/;"	v
+color	network_studies.R	/^    geom_line(aes(y = attractive + repulsive), color = "gray39") +$/;"	v
+color	network_studies.R	/^    geom_line(aes(y = attractive), color = "cornflowerblue") + $/;"	v
+color	network_studies.R	/^    geom_line(aes(y = repulsive), color = "coral") +$/;"	v
+color	psyichological_networks.R	/^                     color = c("lightblue", "lightsalmon")$/;"	v
+color	psyichological_networks.R	/^       color = c("lightblue", "lightsalmon"), $/;"	v
+color	psyichological_networks.R	/^       color = c("lightblue", "lightsalmon"),$/;"	v
+color	psyichological_networks.R	/^       color = c("lightblue", "lightsalmon",$/;"	v
+congruence	psyichological_networks.R	/^# congruence = measure of similarity of two configurations; measured around the centroids$/;"	v
+d	matrices.R	/^d <- get_determinant(m)$/;"	g
+d	network_studies.R	/^d <- seq(1, 100)$/;"	g
+data	matrices.R	/^  data <- data.frame(x = 0, y = 0)$/;"	v
+derive_basis_vectors	matrices.R	/^derive_basis_vectors <- function(v) {$/;"	f
+det	matrices.R	/^          det <- (-1) * det$/;"	v
+det	matrices.R	/^        det <- estimate_determinant(M_cof[i_i, j_i][[1]])$/;"	v
+det	matrices.R	/^    det <- det + reference[i] * estimate_determinant(cofactor_matrix[i][[1]])$/;"	v
+det	matrices.R	/^  det <- get_determinant(M)$/;"	v
+dx	matrices.R	/^dx <- get_determinant(dx)$/;"	g
+dx	matrices.R	/^dx <- matrix(c(10, -2, -2, 32, 8, 4, 24, 12, -4), byrow = TRUE, nrow = 3)$/;"	g
+dy	matrices.R	/^dy <- get_determinant(dy)$/;"	g
+dy	matrices.R	/^dy <- matrix(c(4, 10, -2, 2, 32, 4, 30, 24, -4), byrow = TRUE, nrow = 3)$/;"	g
+dz	matrices.R	/^dz <- get_determinant(dz)$/;"	g
+dz	matrices.R	/^dz <- matrix(c(4, -2, 10, 2, 8, 32, 30, 12, 24), byrow = TRUE, nrow = 3)$/;"	g
+estimate	matrices.R	/^M %*% get_cofactor_matrix(M, estimate = TRUE, adjoint = TRUE) * (1 \/ get_determinant(M))$/;"	v
+estimate	matrices.R	/^get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE) {$/;"	v
+estimate	matrices.R	/^get_cofactor_matrix(m, estimate = TRUE, adjoint = TRUE)$/;"	v
+estimate_determinant	matrices.R	/^estimate_determinant <- function(M) {$/;"	f
+estimate_k	network_studies.R	/^estimate_k <- function(W, L, C, V) {$/;"	f
+evecs	psyichological_networks.R	/^evecs <- EVD$vec[, 1:p] # eigenvectors, taken as a 2-dimensional solution$/;"	g
+force_attract	network_studies.R	/^force_attract <- function(d, k, params = "d^2 \/ k"){$/;"	f
+force_repulsive	network_studies.R	/^force_repulsive <- function(d, k, params = "(-1) * (k ^2 \/ d)") {$/;"	f
+get_cofactor	matrices.R	/^get_cofactor <- function(M, i, j) {$/;"	f
+get_cofactor_matrix	matrices.R	/^get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE) {$/;"	f
+get_determinant	matrices.R	/^get_determinant <- function(M, reference_no = 1, reference_dim = "row") {$/;"	f
+get_inverse	matrices.R	/^get_inverse <- function(M) {$/;"	f
+group	chapter1.R	/^group <- sample(c("E", "P"), 100, replace = TRUE)$/;"	g
+groups	psyichological_networks.R	/^       groups = list(Depression = 1:16,$/;"	v
+i	partial_correlation_networks.R	/^i <- solve(m)$/;"	g
+k	network_studies.R	/^k  <- estimate_k(100, 100, 1.5, d) $/;"	g
+layout	psyichological_networks.R	/^qgraph(adult_zeroorder, layout = "spring",$/;"	v
+limits	matrices.R	/^  scale_x_continuous(breaks = seq(1, max(as_product_plot(v, M)[1]) * 5, 1), limits = c(0, max(as_product_plot(v, M)[1]) * 2)) +$/;"	v
+m	chapter1.R	/^m <- matrix(c(1,4,5,7,8,1), ncol = 3)$/;"	g
+m	matrices.R	/^  m <- matrix(rep(0, (nrow(M) - 1) * (ncol(M) - 1)), nrow = nrow(M) - 1, ncol = ncol(M) - 1)$/;"	v
+m	matrices.R	/^m <- matrix(c(2, 1, 1, 1, -2, 3, -3, 2, -2), byrow = TRUE, nrow = 3)$/;"	g
+m	matrices.R	/^m <- matrix(c(4, -2, -2, 2, 8, 4, 30, 12, -4), byrow = TRUE, nrow = 3)$/;"	g
+m	partial_correlation_networks.R	/^m <- matrix(c(x, y, z), ncol=3)$/;"	g
+m	partial_correlation_networks.R	/^m <- matrix(sample(rnorm(100)), ncol=10, nrow=10)$/;"	g
+main	psyichological_networks.R	/^plot(adult_mds_spline, plot.type="Shepard", main = "Spline")$/;"	v
+ncol	matrices.R	/^    M_est <- matrix(nrow = nrow(M), ncol = ncol(M))$/;"	v
+network_graph	network_studies.R	/^network_graph <- function(input) {$/;"	f
+new_point	matrices.R	/^  new_point <- data.frame(x = v[1], y = v[2])$/;"	v
+original	matrices.R	/^original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))$/;"	g
+params	network_studies.R	/^force_attract <- function(d, k, params = "d^2 \/ k"){$/;"	v
+params	network_studies.R	/^force_repulsive <- function(d, k, params = "(-1) * (k ^2 \/ d)") {$/;"	v
+plot_data	psyichological_networks.R	/^plot_data <- tibble(data.frame(adult_mds$conf))$/;"	g
+product_vec	matrices.R	/^  product_vec <- as.vector(product)$/;"	v
+quake	chapter1.R	/^quake <- read.table("quake.txt", header =TRUE)$/;"	g
+reference	matrices.R	/^    reference <- M[, reference_no]$/;"	v
+reference	matrices.R	/^    reference <- M[reference_no, ]$/;"	v
+reference_no	matrices.R	/^get_determinant <- function(M, reference_no = 1, reference_dim = "row") {$/;"	v
+res	network_studies.R	/^res <- data.frame(matrix(ncol=3)) $/;"	g
+rotated	matrices.R	/^rotated <- data.frame(rotation(derive_basis_vectors(v), theta))$/;"	g
+rotation	matrices.R	/^rotation <- function(v, theta) {$/;"	f
+shearing	matrices.R	/^shearing <- function(v, k) {$/;"	f
+strength	network_studies.R	/^         "strength" = c(5, 4, 3)$/;"	v
+theta	matrices.R	/^  theta <- theta * pi \/ 180$/;"	v
+vec	matrices.R	/^  vec <- v %*% x_shearing$/;"	v
+vec1	matrices.R	/^  vec1 <- c(v[1], 0)$/;"	v
+vec2	matrices.R	/^  vec2 <- c(0, v[2])$/;"	v
+vertex_a	network_studies.R	/^         "vertex_a" = c("a", "b", "c"),$/;"	v
+vertex_b	network_studies.R	/^         "vertex_b" = c("b", "c", "a"),$/;"	v
+vsize	psyichological_networks.R	/^       vsize = 0, rescale = FALSE, labels = FALSE)$/;"	v
+x	partial_correlation_networks.R	/^x <- rnorm(100)$/;"	g
+x_shearing	matrices.R	/^  x_shearing <- matrix(c(1, k, 0, 1), byrow = T, ncol = 2)$/;"	v
+y	matrices.R	/^  geom_segment(data = as_product_plot(v, M), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +$/;"	v
+y	matrices.R	/^  geom_segment(data = as_vector_plot(v), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +$/;"	v
+y	matrices.R	/^  geom_segment(data = original, aes(x = 0, y = 0, xend = X1, yend = X2), arrow = arrow(length = unit(0.02, "npc"))) +$/;"	v
+y	matrices.R	/^  geom_segment(data = rotated, aes(x = 0, y = 0, xend = X1, yend = X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc"))) +$/;"	v
+y	matrices.R	/^  geom_text(data = as_product_plot(v, M), aes(x = max(x), y = max(y), label = paste0("Vector p of (", max(x), "; ", max(y), ")")), vjust = -2) +$/;"	v
+y	matrices.R	/^  geom_text(data = as_vector_plot(v), aes(x = max(x), y = max(y), label = paste0("Vector p of (", max(x), "; ", max(y), ")")), vjust = -2) +$/;"	v
+y	network_studies.R	/^    geom_text(aes(x = zero_d, y = -1, label = "k, the ideal distance of vertices \\n where forces cancel each other"), hjust = -0.25, vjust= 0.75) +$/;"	v
+z	partial_correlation_networks.R	/^z  <- rnorm(100) * (1\/x)$/;"	g
+zero_d	network_studies.R	/^zero_d = res[res$sum ==0, ]$d$/;"	g

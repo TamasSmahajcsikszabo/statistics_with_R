@@ -398,3 +398,118 @@ A <- c(-2, -3)
 B <- matrix(c(0, 1, 2, 3, 4, 5, 6, 7, 8), nrow=3, byrow = TRUE)
 B %K% B
 
+generate_identity_matrix <- function(size=3){
+    result <- matrix(ncol=size, nrow=size)
+    for (i in seq(size)){
+        for (j in seq(size)) {
+            if (i == j){
+                result[i,j] <- 1
+            } else {
+                result[i, j] <- 0
+            }
+        }
+    }
+    result
+}
+generate_identity_matrix(10)
+
+is_diagonal_matrix <- function(m){
+    diagonal <- c()
+    not_diagonal <- c()
+    for (i in seq(nrow(m))){
+        for (j in seq(ncol(m))) {
+            if (i==j){
+                diagonal <- c(diagonal, (m[i, i] != 0))
+            } else if (i!=j) {
+                not_diagonal <- c(not_diagonal, (m[i,j] != 0))
+            }
+        }
+    }
+    sum(diagonal) == length(diagonal) && sum(not_diagonal) == 0
+}
+
+is_triangular_matrix <- function(m, direction = "upper") {
+    if (direction == "upper"){
+        upper_test <- c()
+        lower_test <- c()
+        for (i in seq(nrow(m))){
+            for (j in seq(nrow(m))){
+                if (i > j) {
+                    lower_test <- c(lower_test, m[i,j] != 0)
+                } else if (i <= j) {
+                    upper_test <- c(upper_test, m[i,j] != 0)
+                }
+            }
+        }
+        test <- sum(upper_test) == length(upper_test) && sum(lower_test) == 0
+    } else if (direction == "lower"){
+        upper_test <- c()
+        lower_test <- c()
+        for (i in seq(nrow(m))){
+            for (j in seq(nrow(m))){
+                if (i < j) {
+                    upper_test <- c(upper_test, m[i,j] != 0)
+                } else if (i >= j) {
+                    lower_test <- c(lower_test, m[i,j] != 0)
+                }
+            }
+        }
+        test <- sum(lower_test) == length(lower_test) && sum(upper_test) == 0
+    }
+    test
+}
+
+is_symmetric_matrix <- function(m, skew=FALSE){
+    # skew: Boolean, if TRUE, checks for skew-symmetry
+    tests <- c()
+    if (!skew){
+        for (i in seq(nrow(m))){
+            for (j in seq(ncol(m))){
+                tests <- c(tests, m[i,j] == m[j,i])
+            }
+        }
+    } else if (skew){
+        for (i in seq(nrow(m))){
+            for (j in seq(ncol(m))){
+                tests <- c(tests, m[i,j] == (-1) * m[j,i])
+            }
+        }
+    }
+    sum(tests) == nrow(m) * nrow(m)
+}
+
+m  <- matrix(c(1,0,0,3,-2,0,-6,6,-4), nrow = 3, byrow=3)
+n <- matrix(c(2,3,4,0,4,5,0,0,7), nrow=3, byrow = 3)
+is_triangular_matrix(m, "lower")
+is_triangular_matrix(m, "upper")
+is_triangular_matrix(n, "upper")
+is_triangular_matrix(n, "lower")
+is_symmetric_matrix(generate_identity_matrix(100))
+is_symmetric_matrix(m)
+is_symmetric_matrix(n)
+
+q  <- matrix(c(0,-12,-21, 12,0,-9,21,9,0), nrow=3, byrow=TRUE)
+is_symmetric_matrix(q, skew=T)
+
+is_logical_matrix <- function(m){
+    tests <- c()
+    logical_test <- function(x){
+        x %in% c(0,1) || x %in% c(TRUE, FALSE) 
+    }
+    for (i in seq(nrow(m))){
+        for (j in seq(ncol(m))){
+            tests <- c(tests, logical_test(m[i, j]))
+        }
+    }
+
+    sum(tests) == length(m)
+}
+
+
+vec <- sample(c(TRUE, FALSE), 27, replace=TRUE)
+vecm <- matrix(vec, nrow=3)
+is_logical_matrix(vecm)
+
+vecm <- matrix(vec, nrow=3)
+vecm[2,2] <- "bug"
+is_logical_matrix(vecm)

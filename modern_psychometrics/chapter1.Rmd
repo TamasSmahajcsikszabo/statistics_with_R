@@ -1,0 +1,19 @@
+---
+title: "Chapter 1 - Classical Test Theory [CTT]"
+---
+
+The true score model (in CTT core):
+X = T + E
+observed test score = unknown true test score + unknown error
+
+when measuring latent variables:
+1. measurement error
+2. consistency of the test, stability over time
+
+X is often a composite score comprising *k* items
+\[X = \sum_ {i =1 } X_i \]
+
+```{r , echo = FALSE options}
+
+```
+
