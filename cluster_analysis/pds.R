@@ -154,3 +154,57 @@ ggplot(critframe, aes(x = k, y = score, color = measure)) +
   geom_point(aes(shape = measure)) +
   geom_line(aes(linetype = measure)) +
   scale_x_continuous(breaks = 1:10, labels = 1:10)
+
+
+# clusterboot with kmeans
+kbest.p <- 5
+cboot <- clusterboot(scaled, clustermethod = kmeansCBI, runs = 100, iter.max = 100, krange = kbest.p, seed = 15555)
+
+# assing new points to clusters
+assign_cluster <- function(newpt, centers, xcenter = 0, xscale = 1) {
+  xpt <- (newpt - xcenter) / xscale
+  dists <- apply(centers, 1, FUN = function(c0) {
+    sqrt_edist(c0, xpt)
+  })
+  which.min(dists)
+}
+
+
+# example of assinging new points to clusters
+rnorm.multidim <- function(n, mean, sd, colstr = "x") {
+  ndim <- length(mean)
+  data <- NULL
+  for (i in 1:ndim) {
+    col <- rnorm(n, mean = mean[[i]], sd = sd[[i]])
+    data <- cbind(data, col)
+  }
+  cnames <- paste(colstr, 1:ndim, sep = "")
+  colnames(data) <- cnames
+  data
+}
+
+mean1 <- c(1, 1, 1)
+sd1 <- c(1, 2, 1)
+
+mean2 <- c(10, -3, 5)
+sd2 <- c(2, 1, 2)
+
+mean3 <- c(-5, -5, -5)
+sd3 <- c(1.5, 2, 1)
+
+toydata <- data.frame()
+for (i in c(1, 2, 3)) {
+  assign(paste0("clust", i), rnorm.multidim(100, get(paste0("mean", i)), get(paste0("sd", i))))
+  toydata <- rbind(toydata, get(paste0("clust", i)))
+}
+tmatrix <- scale(toydata)
+tcenter <- attr(tmatrix, "scaled:center")
+tscale <- attr(tmatrix, "scaled:scale")
+kbest.t <- 3
+tclusters <- kmeans(tmatrix, kbest.t, 100, 100)
+
+
+unscale <- function(scaledpt, centervec, scalevec) {
+  scaledpt * scalevec / centervec
+}
+unscale(tclusters$centers[1, ], tcenter, tscale)
