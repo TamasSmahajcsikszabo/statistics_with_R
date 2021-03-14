@@ -1,4 +1,4 @@
-
+library(tidyverse)
 
 # matrix multiplication
 
@@ -321,6 +321,7 @@ B <- matrix(seq(1,9), ncol = 3)
 # Kronecker product
 `%K%` <- function(A, B){
     if (all(is.vector(A), is.vector(B))){
+        print("vectors")
         result <- matrix(nrow = length(A), ncol = length(B))
         for (i in seq(length(A))){
             for (j in seq(length(B))){
@@ -328,6 +329,7 @@ B <- matrix(seq(1,9), ncol = 3)
             }
         }
     } else if (all(is.matrix(A), is.matrix(B))) {
+        print("matrices")
         result  <-  matrix(rep(list(B), length(A)), ncol = ncol(A))
         for (i in seq(nrow(A))){
             for (j in seq(ncol(A))){
@@ -336,6 +338,7 @@ B <- matrix(seq(1,9), ncol = 3)
             }
         }
     } else if(is.vector(A) || is.vector(B)) {
+        print("transform")
         if (is.vector(A)){
             A <- matrix(A, nrow=1)
         } else if(is.vector(B)){
