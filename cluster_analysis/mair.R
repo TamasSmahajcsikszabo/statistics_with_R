@@ -105,17 +105,54 @@ plot(get(paste0("fitlca", best_k)))
 library(psychomix)
 
 # mixed scale levels
-library(tidyverse)
-x <- seq(1, 500, by = 1)
-data_binom <- tibble(data.frame(x = x, y = dbinom(x, 500, 0.5)))
-ggplot(data_binom) +
-  geom_point(aes(x, y))
-
-
 library(flexmix) # a flexible infrastructure to fit all sorts of mixture models
+data("zareki")
+set.seed(123)
+zarflex <- stepFlexmix(~1,
+  data = zareki, k = 1:4, nrep = 3,
+  model = list(
+    FLXMRmultinom(addit7 ~ .),
+    FLXMRmultinom(addit8 ~ .),
+    FLXMRmultinom(subtr3 ~ .),
+    FLXMRmultinom(subtr7 ~ .),
+    FLXMRglm(time ~ ., family = "gaussian") # family can be "gamma" for right-skewed metric variables with 0 lower bound, for counts "poisson"
+  )
+)
 
-x <- seq(1, 500, 1)
-prob <- unlist(lapply(x, function(i) {
-  sum(sample(c(0, 1), i, replace = TRUE)) / i
-}))
-plot(prob)
+# get the best model based upon BIC
+zarflex2 <- getModel(zarflex, "BIC")
+cluster <- zarflex2@cluster
+table(cluster)
+
+# to get the distribution parameters
+pars <- parameters(zarflex2)
+# the parameters are on a logit scale, we need exponentiation transformation to get them as odds ratios
+catpars <- sapply(pars[1:4], exp)
+colnames(catpars) <- c("addit7", "subtr3", "addit8", "subtr7")
+# time variable
+pars[[5]]
+
+# for mosaic plots:
+library(vcd)
+vcd::mosaic(catpars)
+
+
+# the mixture weights are a priori probabilities for individuals to be in component j
+# during clustering, these are updated and not influenced by any specific variable
+# in mixture models we can specify covariates that influence these weights
+# such a covariate w is called concomitant variable
+# it has a parameter vector alpha associated with the concomitant variable
+
+zarflexc <- flexmix(~1,
+  data = zareki, cluster = posterior(zarflex2),
+  concomitant = FLXMRmultinom(~class),
+  model = list(
+    FLXMRmultinom(addit7 ~ .),
+    FLXMRmultinom(addit8 ~ .),
+    FLXMRmultinom(subtr3 ~ .),
+    FLXMRmultinom(subtr7 ~ .),
+    FLXMRglm(time ~ ., family = "gaussian") # family can be "gamma" for right-skewed metric variables with 0 lower bound, for counts "poisson"
+  )
+)
+zarflexc@prior # weights with concomitant
+zarflex2@prior # weights without concomitant
