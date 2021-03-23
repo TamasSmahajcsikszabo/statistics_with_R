@@ -151,8 +151,51 @@ zarflexc <- flexmix(~1,
     FLXMRmultinom(addit8 ~ .),
     FLXMRmultinom(subtr3 ~ .),
     FLXMRmultinom(subtr7 ~ .),
-    FLXMRglm(time ~ ., family = "gaussian") # family can be "gamma" for right-skewed metric variables with 0 lower bound, for counts "poisson"
+    FLXMRglm(time ~ ., family = "gaussian")
+    # family can be "gamma" for right-skewed metric variables with 0 lower bound, for counts "poisson"
   )
 )
 zarflexc@prior # weights with concomitant
 zarflex2@prior # weights without concomitant
+
+################################################
+## Mixture  Regression #########################
+
+# mixture regression applications
+# toy example
+set.seed(123)
+x <- rnorm(100)
+Y1 <- 2 * x + rnorm(100, sd = 0.5)
+Y2 <- (-2) * x + rnorm(100, sd = 0.5)
+toydat <- data.frame(X = c(x, x), Y = c(Y1, Y2))
+lm_fit <- lm(Y ~ X, data = toydat)
+coefs <- lm_fit$coefficients
+residuals <- lm_fit$residuals
+fitted <- lm_fit$fitted.values
+resid_plot <- data.frame(x = fitted, y = residuals)
+
+ggplot() +
+  geom_point(data = toydat, aes(X, Y), size = 3) +
+  geom_abline(aes(slope = coefs[1], intercept = coefs[2]))
+
+
+# fitting a two-component mixture regresssion
+library(flexmix)
+toymix <- flexmix(Y ~ X, k = 2, data = toydat)
+pars <- data.frame(parameters(toymix))
+row.names(pars) <- c("int", "sl", "sigma")
+pars$param <- row.names(pars)
+pars <- pars %>%
+  pivot_longer(1:2, names_to = "comp", values_to = "val")
+pars <- pars %>%
+  mutate(cluster = if_else(comp == "Comp.1", "1", "2"))
+
+pars <- pars %>%
+  mutate(cluster = factor(cluster, levels = c(1, 2))) %>%
+  dplyr::select(-comp) %>%
+  pivot_wider(names_from = param, values_from = val)
+
+ggplot() +
+  geom_point(data = cbind(toydat, cluster = as.factor(toymix@cluster)), aes(X, Y, color = cluster)) +
+  scale_color_manual(values = c("coral", "cornflowerblue")) +
+  geom_abline(data = pars, aes(slope = sl, intercept = int, color = cluster))
