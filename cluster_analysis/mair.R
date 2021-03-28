@@ -182,20 +182,96 @@ ggplot() +
 # fitting a two-component mixture regresssion
 library(flexmix)
 toymix <- flexmix(Y ~ X, k = 2, data = toydat)
+# parameters are for each component:
+# intercept, slope and sigma - residual standard deviation
+# clustering is probabilistic which can be turned into hard membership
+
+
 pars <- data.frame(parameters(toymix))
-row.names(pars) <- c("int", "sl", "sigma")
-pars$param <- row.names(pars)
-pars <- pars %>%
-  pivot_longer(1:2, names_to = "comp", values_to = "val")
-pars <- pars %>%
-  mutate(cluster = if_else(comp == "Comp.1", "1", "2"))
 
-pars <- pars %>%
-  mutate(cluster = factor(cluster, levels = c(1, 2))) %>%
-  dplyr::select(-comp) %>%
-  pivot_wider(names_from = param, values_from = val)
+# real life example of a mixture mixed-effect model (repeated measurement)
+# fixed effect is attitude
+# random effect is subject
+# normally lowest BIC wins out of multiple trials, here we pick K=2
 
-ggplot() +
-  geom_point(data = cbind(toydat, cluster = as.factor(toymix@cluster)), aes(X, Y, color = cluster)) +
-  scale_color_manual(values = c("coral", "cornflowerblue")) +
-  geom_abline(data = pars, aes(slope = sl, intercept = int, color = cluster))
+library(MPsychoR)
+library(tibble)
+data("KoreanSpeech")
+tibble(KoreanSpeech)
+set.seed(123)
+koreamix <- flexmix(frequency ~ attitude | subject, k = 2, data = na.omit(KoreanSpeech))
+table(koreamix@cluster)
+parameters(koreamix)
+
+# perfect separation by genders
+table(Cluster = clusters(koreamix), Gender = na.omit(KoreanSpeech)$gender)
+
+
+#### GAM mixture
+# GAMs are a nonlinear framework which typically uses splines or smoothers to achiveve a nonlinear fit
+library(gamair)
+library(lattice)
+data("brain")
+
+# exclude outliers:
+brain <- brain[brain$medFPQ > 5e-3, ]
+trellis.par.set(regions = list(col = colorRampPalette(c("cadetblue4", "white", "coral4"))))
+levelplot(log(medFPQ) ~ Y * X, data = brain)
+
+
+# fit the model with K=3
+
+
+###################################################################################################
+# Dirichlet based clustering
+
+
+# DPM: Dirichlet Process Mixture
+# due to Bayesian estimation, number of clusters are directly inferred from the data a. k. a. Chinese Restaurant process
+library(dpmixsim)
+
+# 1. dirichlet process regression example
+library(profdpm)
+koreamix2 <- profLinear(frequency ~ attitude, group = subject, data = na.omit(KoreanSpeech))
+# get parameters
+koreamix2$m
+
+# perfect separation by genders
+table(Cluster = koreamix2$clust, Gender = na.omit(KoreanSpeech)$gender)
+
+
+
+
+
+
+
+
+
+#######################################################################
+#################  functions ##########################################
+
+prepare_pars <- function(dataset) {
+  pars <- data.frame(parameters(dataset))
+  row.names(pars) <- c("int", "sl", "sigma")
+  pars$param <- row.names(pars)
+  pars <- pars %>%
+    pivot_longer(1:2, names_to = "comp", values_to = "val")
+  pars <- pars %>%
+    mutate(cluster = if_else(comp == "Comp.1", "1", "2"))
+
+  pars <- pars %>%
+    mutate(cluster = factor(cluster, levels = c(1, 2))) %>%
+    dplyr::select(-comp) %>%
+    pivot_wider(names_from = param, values_from = val)
+  pars
+}
+
+plot_mix <- function(dataset, mix, pars, x, y) {
+  dataset <- na.omit(dataset)
+  ggplot() +
+    # geom_point(data = tibble(cbind(dataset, cluster = as.factor(mix@cluster))), aes(as.numeric(x), y, color = cluster)) +
+    scale_color_manual(values = c("coral", "cornflowerblue")) +
+    geom_abline(data = pars, aes(slope = sl, intercept = int, color = cluster))
+}
+
+plot_mix(dataset = KoreanSpeech, mix = koreamix, pars = prepare_pars(koreamix), x = "scenario", y = "frequency")
