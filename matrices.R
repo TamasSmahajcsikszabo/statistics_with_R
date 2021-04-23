@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggrepel)
 
 # matrix multiplication
 
@@ -80,26 +81,50 @@ M <- matrix(c(1, 2, 2, -2), byrow = TRUE, ncol = 2)
 v %*% M
 
 as_vector_plot <- function(v) {
+    # produces DF of coordinates to plot v() vector from origo
   data <- data.frame(x = 0, y = 0)
   new_point <- data.frame(x = v[1], y = v[2])
   bind_rows(data, new_point)
 }
 
 as_product_plot <- function(v, M) {
+    # produces DF of coordinates of product of v vector and M matrix
   product <- v %*% M
   product_vec <- as.vector(product)
   as_vector_plot(product_vec)
 }
 
-ggplot() +
-  geom_point(data = as_vector_plot(v), aes(x, y)) +
-  geom_segment(data = as_vector_plot(v), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +
-  geom_text(data = as_vector_plot(v), aes(x = max(x), y = max(y), label = paste0("Vector p of (", max(x), "; ", max(y), ")")), vjust = -2) +
-  geom_point(data = as_product_plot(v, M), aes(x, y)) +
-  geom_segment(data = as_product_plot(v, M), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +
-  geom_text(data = as_product_plot(v, M), aes(x = max(x), y = max(y), label = paste0("Vector p of (", max(x), "; ", max(y), ")")), vjust = -2) +
-  scale_x_continuous(breaks = seq(1, max(as_product_plot(v, M)[1]) * 5, 1), limits = c(0, max(as_product_plot(v, M)[1]) * 2)) +
-  ylim(0, v[2] * 5)
+show_vector <- function(v) {
+    paste0("[ ", paste0(round(v,2), collapse=", "), " ]")
+}
+
+show_matrix <- function(M) {
+    matrix_str <- ""
+    for (m in nrow(M)-1) {
+        row_str <- paste0(show_vector(M[m,]), "\n")
+        matrix_str  <- paste0(matrix_str, row_str)
+    }
+    matrix_str  <- paste0(matrix_str, show_vector(M[nrow(M),]))
+    matrix_str
+
+}
+
+transform_vector <- function(v, M) {
+    # takes v vector and M matrix
+    ggplot() +
+      geom_point(data = as_vector_plot(v), aes(x, y)) +
+      geom_segment(data = as_vector_plot(v), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +
+      geom_text(data = as_vector_plot(v), aes(x = max(x), y = max(y), label = paste0("Vector p of (", max(x), "; ", max(y), ")")), vjust = -2) +
+      geom_point(data = as_product_plot(v, M), aes(x, y)) +
+      geom_segment(data = as_product_plot(v, M), aes(x = 0, y = 0, xend = max(x), yend = max(y)), arrow = arrow(length = unit(0.02, "npc"))) +
+      geom_text(data = as_product_plot(v, M), aes(x = max(x), y = max(y), label = paste0("Vector p` of (", max(x), "; ", max(y), ")")), vjust = -2) +
+      scale_x_continuous(breaks = seq(1, max(as_product_plot(v, M)[1]) * 5, 1), limits = c(0, max(as_product_plot(v, M)[1]) * 2)) +
+      ylim(0, v[2] * 5) +
+      labs(title = paste0("Plotting product of v vector and M matrix"),
+      subtitle = paste0(show_matrix(M), " multiplies ", show_vector(v)))
+}
+
+transform_vector(v, M)
 
 
 # matrix transformations
@@ -133,7 +158,7 @@ shearing <- function(v, k) {
              title = "Shearing along X and Y axis by matrix transformation",
              x = "X",
              y = "Y",
-             subtitle = paste0('base vector is (',v[1], '; ',v[2],')'),
+             subtitle = paste0("The base vector is ",show_vector(v)),
              caption = paste0('k = ',k)
         )
 
@@ -147,10 +172,14 @@ ggplot() +
 
 
 derive_basis_vectors <- function(v) {
+    # decomposes vectors to the basis vectors
   vec1 <- c(v[1], 0)
   vec2 <- c(0, v[2])
   matrix(c(vec1, vec2), byrow = TRUE, ncol = 2)
 }
+
+
+
 
 rotation <- function(v, theta) {
     # radius to degree
@@ -158,17 +187,28 @@ rotation <- function(v, theta) {
   v %*% matrix(c(cos(theta), (-1) * sin(theta), sin(theta), cos(theta)), byrow = TRUE, ncol = 2)
 }
 
+draw_coordinate_system <- function() {
+    ggplot()+
+        geom_segment(aes(x=-Inf, y=0, xend=Inf, yend=0)) +
+        geom_segment(aes(x=0, y=-Inf, xend=0, yend=Inf)) +
+        labs (x = "X",
+              y = "Y")
+}
 
-v <- c(1, 1)
-original <- data.frame(matrix(unlist(derive_basis_vectors(v)), byrow = TRUE, ncol = 2))
-rotated <- data.frame(rotation(derive_basis_vectors(v), theta))
+rotate_vector <- function(v, theta, magnify=2) {
+    original <- data.frame(t(v))
+    rotated <- as.data.frame(rotation(unlist(original), theta))
 
+    draw_coordinate_system() +
+        geom_segment(data=original, aes(x=0,y=0, xend=X1, yend=X2), arrow=arrow(length=unit(0.02,"npc"))) +
+        geom_segment(data=rotated, aes(x=0,y=0, xend=V1, yend=V2), arrow=arrow(length=unit(0.02,"npc")), color = "darkblue") +
+        xlim(-max(original)*magnify, max(original)*magnify) +
+        ylim(-max(original)*magnify, max(original)*magnify) +
+        geom_text_repel(data=original,aes(X1, X2, label = paste0("Original vector of ", show_vector(v))), vjust=-.075) +
+        geom_text_repel(data=rotated,aes(V1, V2, label = paste0("Rotated vector of ", show_vector(unlist(rotated)))), color="darkblue")
 
-ggplot() +
-  geom_point(data = original, aes(X1, X2)) +
-  geom_segment(data = original, aes(x = 0, y = 0, xend = X1, yend = X2), arrow = arrow(length = unit(0.02, "npc"))) +
-  geom_point(data = rotated, aes(X1, X2)) +
-  geom_segment(data = rotated, aes(x = 0, y = 0, xend = X1, yend = X2), linetype = "dashed", arrow = arrow(length = unit(0.02, "npc")))
+}
+rotate_vector(c(6,5), -90, magnify=1.4)
 
 # conjugate transpose
 Conj(t(rotation(v, theta)))
@@ -349,6 +389,10 @@ B <- matrix(seq(1,9), ncol = 3)
 
     result
 }
+v <- sample(1:9, 7)
+v %K% v
+Kronecker <- M %K% M
+Kronecker[2,2]
 
 #Hadamard product
 check_size <- function(A, B){
@@ -378,6 +422,9 @@ check_size <- function(A, B){
     }
     result
 }
+
+A = matrix(c(2,3,4,5), nrow=2)
+A %H% A
 
 
 # exercises 5.7
