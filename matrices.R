@@ -231,7 +231,7 @@ estimate_determinant <- function(M) {
   M[1, 1] * M[2, 2] - M[1, 2] * M[2, 1]
 }
 
-get_cofactor_matrix <- function(M, estimae = FALSE, adjoint = TRUE) {
+get_cofactor_matrix <- function(M, estimate = FALSE, adjoint = TRUE) {
   i <- seq(1, nrow(M))
   j <- seq(1, ncol(M))
   m <- matrix(rep(0, (nrow(M) - 1) * (ncol(M) - 1)), nrow = nrow(M) - 1, ncol = ncol(M) - 1)
@@ -461,7 +461,7 @@ generate_identity_matrix <- function(size=3){
     }
     result
 }
-generate_identity_matrix(10)
+generate_identity_matrix(3)
 
 is_diagonal_matrix <- function(m){
     diagonal <- c()

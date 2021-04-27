@@ -31,6 +31,7 @@ ggplot(project.plus, aes(PC1, PC2, color = cluster)) +
 
 # evaluating clusters
 library(fpc)
+hclustCBI
 kbest.p <- 5
 cboot.clust <- clusterboot(scaled, clustermethod = hclustCBI, method = "ward", k = kbest.p)
 summary(cboot.clust$result)
