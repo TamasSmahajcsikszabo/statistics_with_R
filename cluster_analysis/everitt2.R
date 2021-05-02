@@ -2,16 +2,18 @@ library(ggplot2)
 library(tibble)
 library(dplyr)
 library(stringr)
+library(SMPracticals)
 
 
 
 
-dataset <- sample(0.06:1.76, 100, replace = TRUE)
+dataset <- seq(-4, 4, length.out = 100)
 
-kernel_estimate <- function(x, type = "Gaussian", ...) {
+
+kernel_estimate <- function(x, type = "Gaussian", scaling = TRUE, ...) {
   if (type %in% c("Gaussian", "normal")) {
     K <- function(X) {
-      (1 / (sqrt(2 * pi)))^(exp(1)^((-1 / 2) * X^2))
+      (1 / (sqrt(2 * pi))) * (exp(1)^((-1 / 2) * X^2))
     }
   } else if (type %in% c("rectangular", "rect")) {
     K <- function(X) {
@@ -33,25 +35,67 @@ kernel_estimate <- function(x, type = "Gaussian", ...) {
         }
       }))
     }
+  } else if (type %in% c("binorm", "bivariate", "bivariate normal")) {
+    K <- function(X) {
+      if (scaling) {
+        X <- scale(X)
+      }
+      x <- unname(unlist(X[, 1]))
+      y <- unname(unlist(X[, 2]))
+      1 / (2 * pi) * exp((-1 / 2) * (x^2 + y^2))
+    }
+  } else if (type == "Epanechikov") {
+    K <- function(X) {
+      if (scaling) {
+        X <- scale(X)
+      }
+      x <- unname(unlist(X[, 1]))
+      y <- unname(unlist(X[, 2]))
+      unlist(lapply(1:length(x), function(i) {
+        if ((x[i]^2 + y[i]^2) < 1) {
+          2 / pi * (1 - x[i]^2 - y[i]^2)
+        } else {
+          0
+        }
+      }))
+    }
   }
   K(x)
 }
 
-density_estimate <- function(X, K = "normal", h = 0.005, ...) {
-  n <- length(X)
-  density_est <- rep(0, n)
-  computation <- unlist(lapply(X, function(x) {
-    difference_vector <- unlist(lapply(sort(X), function(xi) {
-      (x - xi) / h
-    }))
-    density_est <- kernel_estimate(difference_vector, type = K) + density_est
-  }))
+data(mtcars)
+X <- mtcars[c("mpg", "disp")]
+dtest <- data.frame()
+is.null(ncol(X))
 
-  density_est <- density_est / (n * h)
+density_estimate <- function(X, K = "normal", h = length(X)^(-1 / 5),scaling=TRUE ...) {
+    density_est <- rep(0, N)
+  if (is.null(ncol(X))) {
+    N <- length(X)
+    for (x in X) {
+      density_est <- density_est + kernel_estimate(unlist(lapply(X, function(xi) {
+        (x - xi) / h
+      })), type = K) / (N * h)
+    }
+  } else {
+    if (!K %in% c("binorm", "bivariate", "bivariate normal", "Epanechikov")) {
+      stop("Density method not mathing bivatiate setting!")
+    } else {
+        if (scaling){
+        for (i in nrow(X)) {
+            density_est <- density_estimate + kernel_estimate(unlist(lapply(1:nrow(X), function(x){
+                                                                                
+
+      })), scaling=scaling, type=K) / (n * h * h)
+        }
+    }
+  }
+  }
+
   data.frame(x = sort(X), d = density_est)
 }
-density_estimate(dataset)
-
+data(galaxy)
+density_estimate(galaxy)
 
 replace <- function(x, o = "", r = "") {
   gsub(o, r, x)
@@ -71,25 +115,18 @@ density_plot <- function(X, K = "normal", h = 1.28, smoothing = 1.0, ...) {
   #   group_by(x = M) %>%
   #   summarise(d = max(d, na.rm=TRUE))
   ggplot() +
-    # geom_segment(data = tibble(x = sort(X)), aes(x = x, xend = x, y = 0, yend = 0.05), alpha = 1 / 10) +
-    geom_point(data = density_est, aes(x, d)) +
+    # geom_segment(data = tibble(x = sort(X)), aes(x = x, xend = x, y = 0, yend = h / 100)) +
+    geom_path(data = density_est, aes(x, d)) +
+    # geom_point(data = density_est, aes(x, d)) +
     theme_light()
 }
-density_plot(X, h = 0.235, smoothing = 6)
-plot(density(X))
+density_plot(galaxy, h = 1.002, K = "normal")
 
-
-data(mtcars)
-dataset <- mtcars[, c(3, 4)]
-bivariate_denisty <- density(as.matrix(scale(dataset)))
-plot(bivariate_denisty)
-
-ggplot(dataset) +
-  geom_point(aes(disp, hp))
 
 bivariate_density_plot <- function(dataset, title = "", xlab = "", ylabl = "", ...) {
   names(dataset) <- c("x", "y")
   ggplot(dataset, aes(x, y)) +
+    geom_jitter(color = "#e34234", alpha = 1 / 3) +
     geom_point(color = "#e34234") +
     geom_density2d(linetype = "dashed", size = 0.5, color = "#49579F") +
     labs(
@@ -101,4 +138,13 @@ bivariate_density_plot <- function(dataset, title = "", xlab = "", ylabl = "", .
 }
 
 
-bivariate_density_plot(distance[, c(1, 2)])
+bivariate_density_plot(mtcars[, 3:4])
+
+
+library(car)
+scatterplotMatrix(mtcars)
+
+
+scatterplotmatrix <- function(data) {
+
+}
