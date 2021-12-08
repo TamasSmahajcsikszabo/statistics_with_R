@@ -1,4 +1,4 @@
-library(tidyverse)
+fibrary(tidyverse)
 library(ggrepel)
 
 # matrix multiplication
@@ -293,6 +293,16 @@ get_determinant <- function(M, reference_no = 1, reference_dim = "row") {
 }
 
 get_determinant(M)
+m <- matrix(c(2,1,1,1,-2,3,-3,2,-2), ncol=3, byrow=TRUE)
+get_determinant(m)
+for (i in 1:3){
+    for (j in 1:3) {
+        print(paste0(i, " : ", j))
+        print(get_cofactor_matrix(m)[i,j])
+        print(get_cofactor_matrix(m, estimate=T)[i,j])
+    }
+}
+get_cofactor_matrix(m)
 
 
 get_inverse <- function(M) {

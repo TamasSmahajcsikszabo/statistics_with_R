@@ -3,14 +3,11 @@ library(tibble)
 library(dplyr)
 library(stringr)
 library(SMPracticals)
-
-
-
+library(tidyverse)
 
 dataset <- seq(-4, 4, length.out = 100)
 
-
-kernel_estimate <- function(x, type = "Gaussian", scaling = TRUE, ...) {
+kernel_estimate <- function(x, y = NA, type = "Gaussian", ...) {
   if (type %in% c("Gaussian", "normal")) {
     K <- function(X) {
       (1 / (sqrt(2 * pi))) * (exp(1)^((-1 / 2) * X^2))
@@ -36,31 +33,27 @@ kernel_estimate <- function(x, type = "Gaussian", scaling = TRUE, ...) {
       }))
     }
   } else if (type %in% c("binorm", "bivariate", "bivariate normal")) {
-    K <- function(X) {
-      if (scaling) {
-        X <- scale(X)
-      }
-      x <- unname(unlist(X[, 1]))
-      y <- unname(unlist(X[, 2]))
-      1 / (2 * pi) * exp((-1 / 2) * (x^2 + y^2))
+    K <- function(X, Y) {
+      unlist(lapply(1:length(X), function(i) {
+        1 / (2 * pi) * exp((-1 / 2) * (X[i]^2 + Y[i]^2))
+      }))
     }
   } else if (type == "Epanechikov") {
-    K <- function(X) {
-      if (scaling) {
-        X <- scale(X)
-      }
-      x <- unname(unlist(X[, 1]))
-      y <- unname(unlist(X[, 2]))
+    K <- function(X, Y) {
       unlist(lapply(1:length(x), function(i) {
-        if ((x[i]^2 + y[i]^2) < 1) {
-          2 / pi * (1 - x[i]^2 - y[i]^2)
+        if ((X[i]^2 + Y[i]^2) < 1) {
+          2 / pi * (1 - X[i]^2 - Y[i]^2)
         } else {
           0
         }
       }))
     }
   }
-  K(x)
+  if (!type %in% c("binorm", "bivariate", "bivariate normal", "Epanechikov")) {
+    K(x)
+  } else {
+    K(x, y)
+  }
 }
 
 data(mtcars)
@@ -68,8 +61,8 @@ X <- mtcars[c("mpg", "disp")]
 dtest <- data.frame()
 is.null(ncol(X))
 
-density_estimate <- function(X, K = "normal", h = length(X)^(-1 / 5),scaling=TRUE ...) {
-    density_est <- rep(0, N)
+density_estimate <- function(X, K = "normal", h = length(X)^(-1 / 5), h_y = NA, scaling = TRUE, ...) {
+  density_est <- rep(0, N)
   if (is.null(ncol(X))) {
     N <- length(X)
     for (x in X) {
@@ -81,15 +74,14 @@ density_estimate <- function(X, K = "normal", h = length(X)^(-1 / 5),scaling=TRU
     if (!K %in% c("binorm", "bivariate", "bivariate normal", "Epanechikov")) {
       stop("Density method not mathing bivatiate setting!")
     } else {
-        if (scaling){
-        for (i in nrow(X)) {
-            density_est <- density_estimate + kernel_estimate(unlist(lapply(1:nrow(X), function(x){
-                                                                                
-
-      })), scaling=scaling, type=K) / (n * h * h)
+      if (scaling) {
+        for (x in 1:length(X)) {
+          density_est <- density_estimate + kernel_estimate(unlist(lapply(1:length(X), function(i) {
+                                                                              (x - X[i])/
+          })), scaling = scaling, type = K) / (n * h * h)
         }
+      }
     }
-  }
   }
 
   data.frame(x = sort(X), d = density_est)
@@ -143,8 +135,3 @@ bivariate_density_plot(mtcars[, 3:4])
 
 library(car)
 scatterplotMatrix(mtcars)
-
-
-scatterplotmatrix <- function(data) {
-
-}
